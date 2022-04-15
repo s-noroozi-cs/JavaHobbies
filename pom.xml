@@ -10,26 +10,8 @@
     <packaging>pom</packaging>
 	
 	<modules>
-		<module>ExceptionFreeFuncInterface</module>
+		<module>exception-free-func-interface</module>
+        <module>spring-boot-proxy-aspect</module>
 	</modules>
-    
-    <properties>
-        <java.source..version>17</java.source..version>
-        <java.target.version>17</java.target.version>
-    </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.source..version}</source>
-                    <target>${java.target.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 
 </project>
