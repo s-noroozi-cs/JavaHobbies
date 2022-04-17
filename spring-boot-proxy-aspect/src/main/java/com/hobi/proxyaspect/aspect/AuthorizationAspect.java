@@ -1,6 +1,7 @@
 package com.hobi.proxyaspect.aspect;
 
 import com.hobi.proxyaspect.annotation.Authorization;
+import com.hobi.proxyaspect.util.LogUtil;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -19,8 +20,7 @@ public class AuthorizationAspect {
     public void handle_authorization(Authorization authorization){
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
-        String msg = String.format("time:%s: The request method: %s, url: %s", LocalDateTime.now(),request.getMethod(),request.getRequestURI());
-        System.out.println("aspect impl. --> " + msg);
+        LogUtil.log(request,"AuthorizationAspect");
     }
 
 }
