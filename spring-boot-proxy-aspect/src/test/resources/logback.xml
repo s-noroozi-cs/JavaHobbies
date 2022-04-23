@@ -1,13 +1,6 @@
 <configuration>
 
-    <appender name="MEMORY" class="com.hobi.proxyaspect.logging.MemoryAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
-            </Pattern>
-        </layout>
-    </appender>
-
+    <appender name="MEMORY" class="com.hobi.proxyaspect.logging.MemoryAppender"/>
 
     <root level="info">
         <appender-ref ref="MEMORY"/>
