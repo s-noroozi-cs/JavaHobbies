@@ -19,13 +19,21 @@ public class MemoryAppender extends AppenderBase<ILoggingEvent>{
     @Override
     public void start() {
         super.start();
-        //MemoryAppenderInstance.setInstance(this);
+        MemoryAppenderInstance.setInstance(this);
     }
 
     @Override
     public void stop() {
-        //MemoryAppenderInstance.setInstance(null);
+        MemoryAppenderInstance.setInstance(null);
         super.stop();
         events.clear();
+    }
+
+    public List<ILoggingEvent> getEvents() {
+        List<ILoggingEvent> retVal = new ArrayList<>();
+        synchronized (events) {
+            retVal.addAll(events);
+        }
+        return retVal;
     }
 }
