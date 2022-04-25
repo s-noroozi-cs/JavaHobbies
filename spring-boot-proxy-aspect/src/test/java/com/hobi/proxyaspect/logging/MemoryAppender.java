@@ -36,4 +36,10 @@ public class MemoryAppender extends AppenderBase<ILoggingEvent>{
         }
         return retVal;
     }
+
+    public void clear(){
+        synchronized (events){
+            events.clear();
+        }
+    }
 }

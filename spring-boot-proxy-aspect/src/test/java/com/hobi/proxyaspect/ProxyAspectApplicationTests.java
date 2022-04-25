@@ -23,18 +23,14 @@ class ProxyAspectApplicationTests {
         return String.format("http://localhost:%d",randomServerPort);
     }
 
-    @AfterAll
-    static void logging_events(){
+    @AfterEach
+    void logging_events(){
         MemoryAppenderInstance.getInstance().getEvents().stream().forEach(System.out::println);
+        MemoryAppenderInstance.getInstance().clear();
     }
 
     @Test
-    void context_loads() {
-        Assertions.assertTrue(MemoryAppenderInstance.getInstance().getEvents().size() > 0);
-    }
-
-    @Test
-    void test_interceptor_logs(){
+    void test_interceptor_then_aspect_logs(){
         restTemplate.getForEntity(getHostUrl() + "/uuid",String.class);
         MemoryAppenderInstance.getInstance().getEvents()
                 .stream()
@@ -49,7 +45,6 @@ class ProxyAspectApplicationTests {
                 .max((a,b) -> (int) (a.getTimeStamp() - b.getTimeStamp()))
                 .filter(i -> i.getMessage().contains("source:AuthorizationAspect,"))
                 .orElseThrow(()-> new RuntimeException("Authorization aspect log should be logged after all others"));
-
     }
 
 
