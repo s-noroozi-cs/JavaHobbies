@@ -81,6 +81,18 @@ class ProxyAspectApplicationTests {
         check_interceptor_log();
     }
 
+    @Test
+    void test_aspect_logs_with_bean_validation() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", "application/json");
+        HttpEntity<String> request = new HttpEntity<>("{}", headers);
+        restTemplate.setErrorHandler(getIgnoreErrorHandler());
+        ResponseEntity<String> resp = restTemplate
+                .postForEntity(getHostUrl() + "/sayHello", request, String.class);
+        Assertions.assertEquals(400, resp.getStatusCode().value());
+        check_aspect_log();
+    }
+
 
     private ResponseErrorHandler getIgnoreErrorHandler() {
         return new ResponseErrorHandler() {
