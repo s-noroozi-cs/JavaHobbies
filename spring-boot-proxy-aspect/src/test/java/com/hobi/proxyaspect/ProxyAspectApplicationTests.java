@@ -1,6 +1,8 @@
 package com.hobi.proxyaspect;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.hobi.proxyaspect.exception.AspectLogNotFoundException;
+import com.hobi.proxyaspect.exception.InterceptorLogNotFound;
 import com.hobi.proxyaspect.logging.MemoryAppenderInstance;
 import com.hobi.proxyaspect.util.LogUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Comparator;
+import java.util.function.Supplier;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -40,26 +43,29 @@ class ProxyAspectApplicationTests {
         MemoryAppenderInstance.getInstance().clear();
     }
 
-    private void check_biz_log(Comparator<ILoggingEvent> minComparator, String logMsg, String description) {
+    private void check_biz_log(
+            Comparator<ILoggingEvent> minComparator
+            , String logMsg
+            , Supplier<? extends RuntimeException> orElseThrow) {
         MemoryAppenderInstance.getInstance().getEvents()
                 .stream()
                 .filter(i -> i.getLoggerName().equals(LogUtil.class.getName()))
                 .min(minComparator)
                 .filter(i -> i.getMessage().contains(logMsg))
-                .orElseThrow(() -> new RuntimeException(description));
+                .orElseThrow(orElseThrow);
     }
 
     private void check_interceptor_log() {
         check_biz_log((a, b) -> (int) (a.getTimeStamp() - b.getTimeStamp())
                 , "source:AuthorizationInterceptor,"
-                , "Interceptor log should be logged before all others");
+                , () -> new InterceptorLogNotFound("Interceptor log should be logged before all others"));
 
     }
 
     private void check_aspect_log() {
         check_biz_log((a, b) -> (int) (b.getTimeStamp() - a.getTimeStamp()),
                 "source:AuthorizationAspect,"
-                , "Authorization aspect log should be logged after all others");
+                , () -> new AspectLogNotFoundException("Authorization aspect log should be logged after all others"));
     }
 
     @Test
@@ -90,7 +96,7 @@ class ProxyAspectApplicationTests {
         ResponseEntity<String> resp = restTemplate
                 .postForEntity(getHostUrl() + "/sayHello", request, String.class);
         Assertions.assertEquals(400, resp.getStatusCode().value());
-        check_aspect_log();
+        Assertions.assertThrowsExactly(AspectLogNotFoundException.class, () -> check_aspect_log());
     }
 
 
