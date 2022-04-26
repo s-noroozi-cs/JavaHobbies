@@ -49,16 +49,24 @@ class ProxyAspectApplicationTests {
                 .orElseThrow(() -> new RuntimeException(description));
     }
 
-    @Test
-    void test_interceptor_then_aspect_logs_without_bean_validation() {
-        restTemplate.getForEntity(getHostUrl() + "/uuid", String.class);
+    private void check_interceptor_log() {
         check_biz_log((a, b) -> (int) (a.getTimeStamp() - b.getTimeStamp())
                 , "source:AuthorizationInterceptor,"
                 , "Interceptor log should be logged before all others");
 
+    }
+
+    private void check_aspect_log() {
         check_biz_log((a, b) -> (int) (b.getTimeStamp() - a.getTimeStamp()),
                 "source:AuthorizationAspect,"
                 , "Authorization aspect log should be logged after all others");
+    }
+
+    @Test
+    void test_interceptor_then_aspect_logs_without_bean_validation() {
+        restTemplate.getForEntity(getHostUrl() + "/uuid", String.class);
+        check_interceptor_log();
+        check_aspect_log();
     }
 
     @Test
@@ -66,7 +74,16 @@ class ProxyAspectApplicationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", "application/json");
         HttpEntity<String> request = new HttpEntity<>("{}", headers);
-        restTemplate.setErrorHandler(new ResponseErrorHandler() {
+        restTemplate.setErrorHandler(getIgnoreErrorHandler());
+        ResponseEntity<String> resp = restTemplate
+                .postForEntity(getHostUrl() + "/sayHello", request, String.class);
+        Assertions.assertEquals(400, resp.getStatusCode().value());
+        check_interceptor_log();
+    }
+
+
+    private ResponseErrorHandler getIgnoreErrorHandler() {
+        return new ResponseErrorHandler() {
             @Override
             public boolean hasError(ClientHttpResponse response) throws IOException {
                 return false;
@@ -81,11 +98,7 @@ class ProxyAspectApplicationTests {
             public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
                 //nop
             }
-        });
-        ResponseEntity<String> resp = restTemplate
-                .postForEntity(getHostUrl() + "/sayHello", request, String.class);
-        Assertions.assertEquals(400, resp.getStatusCode().value());
-
+        };
     }
 
 
