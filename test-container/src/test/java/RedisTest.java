@@ -1,0 +1,2 @@
+public class RedisTest {
+}
