@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -31,8 +32,8 @@ public class KafkaContainerTest {
 
         kafkaContainer = new GenericContainer(DockerImageName.parse(kafkaDockerImage));
         kafkaContainer.withExposedPorts(kafkaPort);
-        kafkaContainer.withEnv("KAFKA_ZOOKEEPER_CONNECT",getZookeeperAddress());
-        kafkaContainer.withEnv("KAFKA_LISTENERS","plaintext://:" + kafkaPort);
+        kafkaContainer.withEnv("KAFKA_ZOOKEEPER_CONNECT", getZookeeperAddress());
+        kafkaContainer.withEnv("KAFKA_LISTENERS", "plaintext://:" + kafkaPort);
         kafkaContainer.start();
     }
 
@@ -47,7 +48,7 @@ public class KafkaContainerTest {
         }
     }
 
-    private static String getZookeeperAddress(){
+    private static String getZookeeperAddress() {
         return zookeeperContainer.getHost() + ":" + zookeeperContainer.getFirstMappedPort();
     }
 
@@ -94,6 +95,15 @@ public class KafkaContainerTest {
         Assertions.assertNotNull(kafkaContainer.getContainerId());
         Assertions.assertNotNull(kafkaContainer.getHost());
         Assertions.assertNotNull(kafkaContainer.getFirstMappedPort());
+    }
+
+    @Test
+    void test_kafka_container_port_access() {
+        try {
+            Socket socket = new Socket(InetAddress.getLocalHost(),kafkaPort);
+        } catch (Throwable e) {
+            Assertions.fail(e.getMessage(), e);
+        }
     }
 
 }
