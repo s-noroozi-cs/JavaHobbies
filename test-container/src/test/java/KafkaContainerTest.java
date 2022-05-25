@@ -22,7 +22,6 @@ public class KafkaContainerTest {
     private static GenericContainer kafkaContainer;
 
 
-
     @BeforeAll
     static void init_container() {
 
@@ -30,12 +29,11 @@ public class KafkaContainerTest {
                 .withExposedPorts(2181);
         zookeeperContainer.start();
 
-
-        int kaf
-        kafkaContainer = new GenericContainer(DockerImageName.parse(kafkaDockerImage))
-                .withExposedPorts()
-        ;
-
+        kafkaContainer = new GenericContainer(DockerImageName.parse(kafkaDockerImage));
+        kafkaContainer.withExposedPorts(kafkaPort);
+        kafkaContainer.withEnv("KAFKA_ZOOKEEPER_CONNECT",getZookeeperAddress());
+        kafkaContainer.withEnv("KAFKA_LISTENERS","plaintext://:" + kafkaPort);
+        kafkaContainer.start();
     }
 
     private static int getLocalFreeRandomPort() {
@@ -47,6 +45,10 @@ public class KafkaContainerTest {
         } catch (Throwable e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private static String getZookeeperAddress(){
+        return zookeeperContainer.getHost() + ":" + zookeeperContainer.getFirstMappedPort();
     }
 
     @Test
@@ -85,5 +87,13 @@ public class KafkaContainerTest {
         }
     }
 
+
+    @Test
+    void test_kafka_container_init() {
+        Assertions.assertNotNull(kafkaContainer);
+        Assertions.assertNotNull(kafkaContainer.getContainerId());
+        Assertions.assertNotNull(kafkaContainer.getHost());
+        Assertions.assertNotNull(kafkaContainer.getFirstMappedPort());
+    }
 
 }
