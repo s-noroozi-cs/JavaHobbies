@@ -1,7 +1,11 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
+import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.InputStream;
@@ -12,28 +16,43 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 public class KafkaContainerTest {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaContainerTest.class);
+
     private static final String zookeeperDockerImage = "zookeeper:3.7.0";
     private static final String kafkaDockerImage = "wurstmeister/kafka:2.13-2.8.1";
 
+    private static Network network = Network.NetworkImpl.builder().build();
     private static final int kafkaPort = getLocalFreeRandomPort();
     private static GenericContainer zookeeperContainer;
 
     private static GenericContainer kafkaContainer;
 
+    private static Consumer<OutputFrame> logConsumer(){
+        return outputFrame -> logger.info(outputFrame.getUtf8String());
+    }
+
 
     @BeforeAll
     static void init_container() {
 
-        zookeeperContainer = new GenericContainer(DockerImageName.parse(zookeeperDockerImage))
-                .withExposedPorts(2181);
+        zookeeperContainer = new GenericContainer(DockerImageName.parse(zookeeperDockerImage));
+        zookeeperContainer.withNetwork(network);
+        zookeeperContainer.withNetworkAliases("zookeeper");
+        zookeeperContainer.withExposedPorts(2181);
+        zookeeperContainer.withLogConsumer(logConsumer());
         zookeeperContainer.start();
 
         kafkaContainer = new GenericContainer(DockerImageName.parse(kafkaDockerImage));
-        kafkaContainer.withExposedPorts(kafkaPort);
-        kafkaContainer.withEnv("KAFKA_ZOOKEEPER_CONNECT", getZookeeperAddress());
-        kafkaContainer.withEnv("KAFKA_LISTENERS", "plaintext://:" + kafkaPort);
+        kafkaContainer.withNetwork(network);
+        kafkaContainer.withNetworkAliases("kafka");
+        kafkaContainer.withExposedPorts(9092);
+        kafkaContainer.withEnv("KAFKA_ZOOKEEPER_CONNECT", "zookeeper:2181");
+        kafkaContainer.withEnv("KAFKA_LISTENERS", "plaintext://:9092");
+        kafkaContainer.withEnv("KAFKA_ADVERTISED_LISTENERS", "plaintext://kafka:9092");
+        kafkaContainer.withLogConsumer(logConsumer());
         kafkaContainer.start();
     }
 
@@ -48,10 +67,6 @@ public class KafkaContainerTest {
         }
     }
 
-    private static String getZookeeperAddress() {
-        return zookeeperContainer.getHost() + ":" + zookeeperContainer.getFirstMappedPort();
-    }
-
     @Test
     void test_zookeeper_container_init() {
         Assertions.assertNotNull(zookeeperContainer);
@@ -63,7 +78,7 @@ public class KafkaContainerTest {
     @Test
     void test_zookeeper_container_command() {
         try {
-            Socket socket = new Socket(zookeeperContainer.getHost(), zookeeperContainer.getFirstMappedPort());
+            Socket socket = new Socket(InetAddress.getLocalHost(), zookeeperContainer.getFirstMappedPort());
             OutputStream os = socket.getOutputStream();
             InputStream is = socket.getInputStream();
 
@@ -100,7 +115,7 @@ public class KafkaContainerTest {
     @Test
     void test_kafka_container_port_access() {
         try {
-            Socket socket = new Socket(InetAddress.getLocalHost(),kafkaPort);
+            Socket socket = new Socket(InetAddress.getLocalHost(), kafkaContainer.getFirstMappedPort());
         } catch (Throwable e) {
             Assertions.fail(e.getMessage(), e);
         }
