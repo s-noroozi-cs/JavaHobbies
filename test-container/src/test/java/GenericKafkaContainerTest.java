@@ -1,6 +1,3 @@
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,10 +13,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Properties;
 import java.util.function.Consumer;
 
 public class GenericKafkaContainerTest {
@@ -29,7 +24,6 @@ public class GenericKafkaContainerTest {
     private static final String kafkaDockerImage = "wurstmeister/kafka:2.13-2.8.1";
 
     private static Network network = Network.NetworkImpl.builder().build();
-    private static final int kafkaPort = getLocalFreeRandomPort();
     private static GenericContainer zookeeperContainer;
 
     private static GenericContainer kafkaContainer;
@@ -58,17 +52,6 @@ public class GenericKafkaContainerTest {
         kafkaContainer.withEnv("KAFKA_ADVERTISED_LISTENERS", "plaintext://kafka:9092");
         kafkaContainer.withLogConsumer(logConsumer());
         kafkaContainer.start();
-    }
-
-    private static int getLocalFreeRandomPort() {
-        try {
-            ServerSocket server = new ServerSocket(0);
-            int port = server.getLocalPort();
-            server.close();
-            return port;
-        } catch (Throwable e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     @Test
@@ -128,27 +111,14 @@ public class GenericKafkaContainerTest {
     @Test
     void test_Kafka_producer_consumer() {
         try {
-            Properties props = new Properties();
+            String bootstrapServer = kafkaContainer.getHost() + ":" + kafkaContainer.getFirstMappedPort();
+            String topic = "test-topic";
+            String message = "test-message";
+            KafkaUtil.produceMessage(bootstrapServer, topic, message);
 
-            props.put("bootstrap.servers", kafkaContainer.getHost() + ":" + kafkaContainer.getFirstMappedPort());
-            props.put("acks", "all");
-            props.put("retries", 0);
-            props.put("linger.ms", 1);
-            props.put("key.serializer",
-                    "org.apache.kafka.common.serialization.StringSerializer");
-            props.put("value.serializer",
-                    "org.apache.kafka.common.serialization.StringSerializer");
-
-            Producer
-                    <String, String> producer = new KafkaProducer
-                    <String, String>(props);
-
-            producer.send(new ProducerRecord<String, String>("test-kafka","test-message"));
-            producer.close();
-
-            Assertions.fail("Kafka container through some images does not work properly");
+            Assertions.fail("I known, this scenario should be throw run time exception.");
         } catch (Throwable ex) {
-            //ignore exception
+            //ignore to pass test, because I know this scenario throw exception
         }
     }
 

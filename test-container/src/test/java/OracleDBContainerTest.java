@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.OracleContainer;
 
 @Disabled
+//issue related to fixed oracle container in M1 arch.
 public class OracleDBContainerTest {
-    //issue related to fixed oracle container in M1 arch.
     private static final String oracleDockerImage = "gvenzl/oracle-xe:21.3.0-slim";
     private static final String oracleSysPass = "sys";
 
