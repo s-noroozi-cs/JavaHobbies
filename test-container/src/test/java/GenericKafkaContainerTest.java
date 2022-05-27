@@ -1,3 +1,6 @@
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,10 +19,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 import java.util.function.Consumer;
 
-public class KafkaContainerTest {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaContainerTest.class);
+public class GenericKafkaContainerTest {
+    private static final Logger logger = LoggerFactory.getLogger(GenericKafkaContainerTest.class);
 
     private static final String zookeeperDockerImage = "zookeeper:3.7.0";
     private static final String kafkaDockerImage = "wurstmeister/kafka:2.13-2.8.1";
@@ -30,7 +34,7 @@ public class KafkaContainerTest {
 
     private static GenericContainer kafkaContainer;
 
-    private static Consumer<OutputFrame> logConsumer(){
+    private static Consumer<OutputFrame> logConsumer() {
         return outputFrame -> logger.info(outputFrame.getUtf8String());
     }
 
@@ -115,9 +119,36 @@ public class KafkaContainerTest {
     @Test
     void test_kafka_container_port_access() {
         try {
-            Socket socket = new Socket(InetAddress.getLocalHost(), kafkaContainer.getFirstMappedPort());
+            new Socket(InetAddress.getLocalHost(), kafkaContainer.getFirstMappedPort());
         } catch (Throwable e) {
             Assertions.fail(e.getMessage(), e);
+        }
+    }
+
+    @Test
+    void test_Kafka_producer_consumer() {
+        try {
+            Properties props = new Properties();
+
+            props.put("bootstrap.servers", kafkaContainer.getHost() + ":" + kafkaContainer.getFirstMappedPort());
+            props.put("acks", "all");
+            props.put("retries", 0);
+            props.put("linger.ms", 1);
+            props.put("key.serializer",
+                    "org.apache.kafka.common.serialization.StringSerializer");
+            props.put("value.serializer",
+                    "org.apache.kafka.common.serialization.StringSerializer");
+
+            Producer
+                    <String, String> producer = new KafkaProducer
+                    <String, String>(props);
+
+            producer.send(new ProducerRecord<String, String>("test-kafka","test-message"));
+            producer.close();
+
+            Assertions.fail("Kafka container through some images does not work properly");
+        } catch (Throwable ex) {
+            //ignore exception
         }
     }
 
