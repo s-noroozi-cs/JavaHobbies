@@ -9,12 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class DbTestApplicationTests {
 
+    private final RestTemplate restTemplate = new RestTemplate();
     @LocalServerPort
     private int port;
-    private RestTemplate restTemplate = new RestTemplate();
 
     private String getStudentsUrl() {
         return "http://localhost:" + port + "/api/v1/students";
@@ -25,13 +26,20 @@ class DbTestApplicationTests {
     }
 
     @Test
-    void test_rest_api_call() {
+    void test_create_rest_api_call() {
         Student student = new Student();
         student.setName("Ali");
         student.setAge(25);
         ResponseEntity<Student> responseEntity =
                 restTemplate.postForEntity(getStudentsUrl(), student, Student.class);
         Assertions.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void test_fetch_all_rest_api_call() {
+        ResponseEntity<Student[]> result =
+                restTemplate.getForEntity(getStudentsUrl(), Student[].class);
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
 }
