@@ -15,9 +15,9 @@ public class PostgreSQLTests extends DbTestApplicationBase {
     @BeforeAll
     static void init_container() {
         postgreSQLContainer = new PostgreSQLContainer(postgresDockerImage)
-                .withDatabaseName("integration-tests-db")
-                .withUsername("sa")
-                .withPassword("sa");
+                .withDatabaseName("my-test-postgreSQL")
+                .withUsername("admin")
+                .withPassword("nimda");
         postgreSQLContainer.withEnv("POSTGRES_PASSWORD","secret").start();
     }
 
