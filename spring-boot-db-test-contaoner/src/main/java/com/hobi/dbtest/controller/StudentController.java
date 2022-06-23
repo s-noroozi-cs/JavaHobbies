@@ -3,8 +3,6 @@ package com.hobi.dbtest.controller;
 import com.hobi.dbtest.entity.Student;
 import com.hobi.dbtest.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +34,21 @@ public class StudentController {
 
     @GetMapping(value = "/{student-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Student> fetchSpecificStudent(@PathVariable("student-id") long studentId) {
-        Optional<Student> student = service.fetch(studentId);
+        return makeResponse(service.fetch(studentId));
+    }
+
+    private ResponseEntity<Student> makeResponse(Optional<Student> student){
         if (student.isPresent())
             return ResponseEntity.ok(student.get());
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping(value = "/{student-id}"
+            , produces = MediaType.APPLICATION_JSON_VALUE
+            , consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Student> updateStudent(@PathVariable("student-id") long studentId
+            , @RequestBody Student student) {
+        return makeResponse(service.update(studentId,student));
     }
 }

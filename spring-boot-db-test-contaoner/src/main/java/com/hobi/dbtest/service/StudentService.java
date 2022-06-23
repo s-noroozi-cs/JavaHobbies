@@ -19,15 +19,28 @@ public class StudentService {
         this.repository = repository;
     }
 
-    public Student create(Student student){
+    public Student create(Student student) {
         return repository.save(student);
     }
 
-    public List<Student> fetchAll(){
+    public List<Student> fetchAll() {
         return repository.findAll();
     }
 
-    public Optional<Student> fetch(long studentId){
+    public Optional<Student> fetch(long studentId) {
         return repository.findById(studentId);
+    }
+
+    public Optional<Student> update(long studentId, Student student) {
+        Optional<Student> entity = repository.findById(studentId);
+        if (entity.isPresent()){
+            Student newEntity = entity.get();
+            if(student.getAge() != null)
+                newEntity.setAge(student.getAge());
+            if(student.getName() != null)
+                newEntity.setName(student.getName());
+            repository.save(newEntity);
+        }
+        return entity;
     }
 }

@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -71,6 +72,17 @@ class DbTestApplicationTests {
         Assertions.assertEquals(HttpStatus.CREATED, student.getStatusCode());
         ResponseEntity<Student> resp = fetchSpecificStudent(student.getBody().getId());
         Assertions.assertEquals(HttpStatus.OK, resp.getStatusCode());
+    }
+
+    @Test
+    void update_not_found_student() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<>("{}", headers);
+        HttpClientErrorException exception = Assertions.assertThrowsExactly(HttpClientErrorException.NotFound.class,
+                () -> restTemplate.exchange(getSpecificStudentUrl(-1), HttpMethod.PUT, entity, Student.class));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
 }
