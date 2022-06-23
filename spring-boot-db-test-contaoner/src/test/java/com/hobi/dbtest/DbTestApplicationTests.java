@@ -11,9 +11,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DbTestApplicationTests {
+abstract class DbTestApplicationBase {
 
     private static final RestTemplate restTemplate = new RestTemplate();
     @LocalServerPort
