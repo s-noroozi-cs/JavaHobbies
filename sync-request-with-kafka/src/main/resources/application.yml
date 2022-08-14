@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        input-in-0:
+          consumer:
+            concurrency: 1
+          destination: async-request
+          contentType: text/plain;charset=UTF-8
+        output:
+          producer:
+            partition-Count: 1
+          destination: async-request
+          contentType: text/plain;charset=UTF-8
+      kafka:
+        binder:
+          brokers: 192.168.164.13:9092
+          autoCreateTopics: true
+          required-acks: all
