@@ -1,5 +1,6 @@
 package com.jpa.interceptor.entity;
 
+import com.jpa.interceptor.listener.RequestEntityListener;
 import com.jpa.interceptor.model.RequestType;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Table(name = "tb_request")
 @Getter
 @Setter
+@EntityListeners(RequestEntityListener.class)
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
