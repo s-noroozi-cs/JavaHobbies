@@ -1,5 +1,11 @@
 spring:
+  application:
+    name: demo-app
   cloud:
     consul:
       host: localhost
       port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 20s
