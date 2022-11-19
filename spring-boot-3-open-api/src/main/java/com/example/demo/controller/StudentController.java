@@ -2,13 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.util.Optional;
 
