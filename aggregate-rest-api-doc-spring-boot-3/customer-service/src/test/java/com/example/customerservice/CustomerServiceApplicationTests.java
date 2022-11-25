@@ -57,6 +57,18 @@ class CustomerServiceApplicationTests {
 
 	}
 
+	@Test
+	void check_swagger_ui_redirect(){
+		HttpResponse<String> response = sendGetRequest("/swagger-ui.html");
+		Assertions.assertEquals(HttpStatus.FOUND.value(), response.statusCode());
+	}
+
+	@Test
+	void check_swagger_ui(){
+		HttpResponse<String> response = sendGetRequest("/swagger-ui/index.html");
+		Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
+	}
+
 	private void check_operation_status(JSONObject operation,boolean existMerchant){
 		Assertions.assertEquals(existMerchant,operation.has("get"));
 		Assertions.assertEquals(existMerchant,operation.has("put"));

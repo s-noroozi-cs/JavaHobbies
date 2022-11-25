@@ -37,6 +37,18 @@ class MerchantServiceApplicationTests {
     }
 
     @Test
+    void check_swagger_ui_redirect(){
+        HttpResponse<String> response = sendGetRequest("/swagger-ui.html");
+        Assertions.assertEquals(HttpStatus.FOUND.value(), response.statusCode());
+    }
+
+    @Test
+    void check_swagger_ui(){
+        HttpResponse<String> response = sendGetRequest("/swagger-ui/index.html");
+        Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
+    }
+
+    @Test
     @SneakyThrows
     void check_open_api_json() {
         HttpResponse<String> response = sendGetRequest("/v3/api-docs");
