@@ -1,25 +1,45 @@
 package com.example.gateway;
 
+import jakarta.annotation.PostConstruct;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@RestController
-@RequestMapping("/api/v1")
 public class GatewayApplication {
 
-	@GetMapping("/test")
-	public String test(){
-		return "ok";
-	}
+    @Autowired
+    private ConfigurableBeanFactory context;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
-	public static void main(String[] args) {
-		SpringApplication.run(GatewayApplication.class, args);
-	}
+    @Bean
+    public GroupedOpenApi gatewayGroup() {
+        for (String name : discoveryClient.getServices()) {
+            GroupedOpenApi bean = GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build();
+            context.registerSingleton("groupedOpenApi_" + name, bean);
+        }
+
+        return GroupedOpenApi.builder().pathsToMatch("/**").group("Gateway").build();
+    }
+
+
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayApplication.class, args);
+    }
 
 }
