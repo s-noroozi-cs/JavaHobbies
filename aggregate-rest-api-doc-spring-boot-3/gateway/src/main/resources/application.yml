@@ -11,3 +11,22 @@ spring:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
         healthCheckInterval: 30s
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: customer
+          uri: lb://customer
+          predicates:
+            - Path=/customer/**
+          filters:
+            - RewritePath=/customer/(?<path>.*), /$\{path}
+        - id: merchant
+          uri: lb://merchant
+          predicates:
+            - Path=/merchant/**
+          filters:
+            - RewritePath=/merchant/(?<path>.*), /$\{path}
+
+springdoc.api-docs.path: ":-)"

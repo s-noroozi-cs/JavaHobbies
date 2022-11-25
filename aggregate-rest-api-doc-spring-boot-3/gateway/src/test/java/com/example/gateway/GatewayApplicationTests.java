@@ -35,15 +35,15 @@ class GatewayApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	@SneakyThrows
-	void check_open_api_json() {
-		HttpResponse<String> response = sendGetRequest("/v3/api-docs");
-		Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
-
-		JSONObject js = new JSONObject(response.body());
-		JSONObject paths = js.getJSONObject("paths");
-	}
+//	@Test
+//	@SneakyThrows
+//	void check_open_api_json() {
+//		HttpResponse<String> response = sendGetRequest("/v3/api-docs");
+//		Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
+//
+//		JSONObject js = new JSONObject(response.body());
+//		JSONObject paths = js.getJSONObject("paths");
+//	}
 
 	@Test
 	void check_swagger_ui_redirect(){
