@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 30s
+  main.web-application-type: reactive
+
+debug: true
+
+springdoc:
+  show-actuator: true
