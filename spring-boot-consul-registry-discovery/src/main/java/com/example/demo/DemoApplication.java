@@ -23,9 +23,9 @@ public class DemoApplication {
         return () -> System.currentTimeMillis();
     }
 
-    @Bean
-    public Supplier<ConsulRawClient.Builder> consulRawClientBuilderSupplier() {
-        return ConsulAutoConfiguration.createConsulRawClientBuilder();
-    }
+//    @Bean
+//    public Supplier<ConsulRawClient.Builder> consulRawClientBuilderSupplier() {
+//        return ConsulAutoConfiguration.createConsulRawClientBuilder();
+//    }
 
 }
