@@ -15,7 +15,7 @@
         <junit.version>5.8.2</junit.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <logback.version>1.2.6</logback.version>
-        <jedis.version>2.10.2</jedis.version>
+        <jedis.version>4.3.1</jedis.version>
     </properties>
 
 
