@@ -4,11 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.time.LocalDateTime;
 
 @Slf4j
 public class CreatePersianTextTests {
@@ -26,7 +22,7 @@ public class CreatePersianTextTests {
 
     @Test
     void test_english_text(){
-        String expectedText = "Hello world!";
+        String expectedText = "Thanks for any chances.";
         byte[] output = PdfUtil.createPdf(expectedText);
         String resultText = PdfUtil.readPdf(new ByteArrayInputStream(output));
         validate_result(expectedText,resultText);
@@ -34,14 +30,9 @@ public class CreatePersianTextTests {
 
     @Test
     void test_persian_text()throws Exception{
-        String expectedText = "Salammmmmm";
+        String expectedText = "برای هر شانسی متشکرم";
         byte[] output = PdfUtil.createPdf(expectedText);
         String resultText = PdfUtil.readPdf(new ByteArrayInputStream(output));
-//        validate_result(expectedText,resultText);
-        File file = new File("/tmp/" + System.currentTimeMillis() + ".pdf");
-        file.createNewFile();
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(output);
-        fos.close();
+        validate_result(expectedText,resultText);
     }
 }
