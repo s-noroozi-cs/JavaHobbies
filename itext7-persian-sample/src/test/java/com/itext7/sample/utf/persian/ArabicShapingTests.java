@@ -9,24 +9,36 @@ import java.util.HexFormat;
 public class ArabicShapingTests {
 
     @Test
-    void test_arabic_text() throws Exception {
-        String salam = "سلام";
-        String shaped = new StringBuilder(new ArabicShaping(
-                ArabicShaping.LETTERS_SHAPE).shape(salam))
-                .toString();
+    void test_arabic_persian_text() throws Exception {
+        String[] texts = {
+                "ملی ایران",
+                "پارسیان" ,
+                "گردشگری"
+        };
+        for(String text : texts) {
+            String shaped = new StringBuilder(new ArabicShaping(
+                    ArabicShaping.LETTERS_SHAPE).shape(text))
+                    .toString();
 
-        System.out.println(salam);
-        System.out.println(shaped);
-        System.out.println("---------------");
+            String shapedPersian = new StringBuilder(new PersianShaping(
+                    PersianShaping.LETTERS_SHAPE).shape(text))
+                    .toString();
 
-        System.out.println(HexFormat.of().formatHex(salam.getBytes(StandardCharsets.UTF_8)));
-        System.out.println(HexFormat.of().formatHex(shaped.getBytes(StandardCharsets.UTF_8)));
-        System.out.println("---------------");
+            System.out.println(text);
+            System.out.println(shaped);
+            System.out.println(shapedPersian);
+            System.out.println("---------------");
 
-        System.out.println(toUnicode(salam));
-        System.out.println(toUnicode(shaped));
-        System.out.println("---------------");
+            System.out.println(HexFormat.of().formatHex(text.getBytes(StandardCharsets.UTF_8)));
+            System.out.println(HexFormat.of().formatHex(shaped.getBytes(StandardCharsets.UTF_8)));
+            System.out.println(HexFormat.of().formatHex(shapedPersian.getBytes(StandardCharsets.UTF_8)));
+            System.out.println("---------------");
 
+            System.out.println(toUnicode(text));
+            System.out.println(toUnicode(shaped));
+            System.out.println(toUnicode(shapedPersian));
+            System.out.println("---------------");
+        }
 
     }
 
