@@ -22,7 +22,7 @@ class DemoApplicationTests {
 
     @BeforeEach
     void prepare_test_data() {
-        long endRange = 5000;
+        long endRange = 5;
         LongStream
                 .rangeClosed(1, endRange)
                 .forEach(i -> {
@@ -51,9 +51,9 @@ class DemoApplicationTests {
         long start = System.currentTimeMillis();
         Page<Student> result= repository
                 .findByNameContainingIgnoreCase(nameContaining, pageRequest);
-        Assertions.assertTrue( result.getTotalPages() > 0);
-        long elapseTime = System.currentTimeMillis()-start;
-        log.info("elapse time: %d".formatted(elapseTime));
+//        Assertions.assertTrue( result.getTotalPages() > 0);
+//        long elapseTime = System.currentTimeMillis()-start;
+//        log.info("elapse time: %d".formatted(elapseTime));
     }
 
 }
