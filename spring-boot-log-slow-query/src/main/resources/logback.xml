@@ -12,7 +12,7 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <logger name="org.hibernate.type.descriptor.sql=trace" level="trace" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
