@@ -16,13 +16,19 @@
         <lombok.version>1.18.26</lombok.version>
         <junit.version>5.9.2</junit.version>
         <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
-        <junit-pioneer.verion>2.0.0</junit-pioneer.verion>
         <system-stubs.version>2.0.2</system-stubs.version>
-        <system-rules.version>1.19.0</system-rules.version>
-        <system-lambda.version>1.2.1</system-lambda.version>
+        <logback.version>1.4.5</logback.version>
+        <google.gson.verion>2.10.1</google.gson.verion>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${google.gson.verion}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -50,6 +56,13 @@
             <version>${system-stubs.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
 
     </dependencies>
 
