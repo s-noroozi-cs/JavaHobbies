@@ -13,6 +13,7 @@ import java.util.Map;
 public class KeycloakAdminRestApi {
     private KeycloakConfig config = new KeycloakConfig();
     private final String version = "20.0.3";
+    private final String docRef = "https://www.keycloak.org/docs-api/20.0.3/rest-api/index.html";
 
 
     public HttpResponse<String> getAdminToken() throws Exception {
@@ -25,5 +26,10 @@ public class KeycloakAdminRestApi {
                 , "password", config.getAdminPass()
         );
         return HttpUtil.submitForm(url, params);
+    }
+
+    public HttpResponse<String> createUser(UserModel userModel){
+        String url = config.getServerUrl() + ("/realms/%s/protocol/openid-connect/token")
+                .formatted(config.getAdminRealm());
     }
 }
