@@ -1,0 +1,7 @@
+Setting up GraalVM with Native Image Support
+
+1. Obtaining distribution
+2. Setting up environment variables
+3. native-image tool installation
+
+reference: https://graalvm.github.io/native-build-tools/latest/graalvm-setup.html
