@@ -75,6 +75,94 @@ public class HttpUtil {
         }
     }
 
+
+    public static HttpResponse<String> sendDeleteRequest(String url, Map<String, String> headerMap) throws Exception {
+        StringBuilder logMsg = new StringBuilder();
+        try {
+            String[] headers = headerMap.entrySet().stream()
+                    .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+                    .toArray(String[]::new);
+
+
+            logMsg.append("""
+                        --- Request ---
+                        url: %s
+                        method: DELETE
+                        headers: %s
+                        
+                    """.formatted(url,Arrays.toString(headers)));
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .headers(headers)
+                    .DELETE()
+                    .build();
+
+            HttpResponse<String> response = sendRequest(request);
+            logMsg.append("""
+                                        
+                    --- Response ---
+                    status code: %d
+                    body: %s
+                    """.formatted(response.statusCode(), response.body()));
+            log.info(logMsg.toString());
+            return response;
+        } catch (Throwable ex) {
+            logMsg.append("""
+                                        
+                    --- Exception ---
+                    message: %s
+                    """.formatted(ex.getMessage()));
+            log.error(logMsg.toString());
+            throw ex;
+        }
+    }
+
+
+    public static HttpResponse<String> sendGetRequest(String url, Map<String, String> headerMap) throws Exception {
+        StringBuilder logMsg = new StringBuilder();
+        try {
+            String[] headers = headerMap.entrySet().stream()
+                    .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+                    .toArray(String[]::new);
+
+
+            logMsg.append("""
+                        --- Request ---
+                        url: %s
+                        method: GET
+                        headers: %s
+                        
+                    """.formatted(url,Arrays.toString(headers)));
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .headers(headers)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = sendRequest(request);
+            logMsg.append("""
+                                        
+                    --- Response ---
+                    status code: %d
+                    body: %s
+                    """.formatted(response.statusCode(), response.body()));
+            log.info(logMsg.toString());
+            return response;
+        } catch (Throwable ex) {
+            logMsg.append("""
+                                        
+                    --- Exception ---
+                    message: %s
+                    """.formatted(ex.getMessage()));
+            log.error(logMsg.toString());
+            throw ex;
+        }
+    }
+
     private static HttpResponse<String> sendRequest(HttpRequest request) throws Exception {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
