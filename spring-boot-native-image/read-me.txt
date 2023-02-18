@@ -1,7 +1,16 @@
+guide reference: https://www.baeldung.com/spring-native-intro
+
 Setting up GraalVM with Native Image Support
+
 
 1. Obtaining distribution
 2. Setting up environment variables
 3. native-image tool installation
 
 reference: https://graalvm.github.io/native-build-tools/latest/graalvm-setup.html
+
+
+Native Compiler
+
+reference: https://www.graalvm.org/22.3/reference-manual/native-image/
+
