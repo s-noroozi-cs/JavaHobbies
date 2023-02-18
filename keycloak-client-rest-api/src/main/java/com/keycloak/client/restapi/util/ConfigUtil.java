@@ -1,4 +1,4 @@
-package com.keycloak.client.restapi;
+package com.keycloak.client.restapi.util;
 
 import java.util.Optional;
 

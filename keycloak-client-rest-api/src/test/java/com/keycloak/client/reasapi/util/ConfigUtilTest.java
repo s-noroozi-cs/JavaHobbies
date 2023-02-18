@@ -1,6 +1,6 @@
-package com.keycloak.client.reasapi;
+package com.keycloak.client.reasapi.util;
 
-import com.keycloak.client.restapi.ConfigUtil;
+import com.keycloak.client.restapi.util.ConfigUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
