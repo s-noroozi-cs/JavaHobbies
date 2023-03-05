@@ -1,44 +1,24 @@
 package com.example.customerservice.controller;
 
-import com.example.customerservice.model.Customer;
-import org.springframework.http.MediaType;
+import com.example.customerservice.client.MerchantClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
 
+    @Autowired
+    private MerchantClient merchantClient;
 
-    @RequestMapping(method = RequestMethod.GET
-            , path = "/{customer-id}"
-            , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> get(@PathVariable("customer-id") Long customerId) {
-        return ResponseEntity.ok().build();
-    }
-
-
-    @RequestMapping(method = RequestMethod.POST
-            , consumes = MediaType.APPLICATION_JSON_VALUE
-            , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity save(@RequestBody Customer customer) {
-        return ResponseEntity.created(URI.create("/?")).build();
-    }
-
-    @RequestMapping(method = RequestMethod.PUT
-            , path = "/{customer-id}"
-            , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> update(@PathVariable("customer-id") Long customerId
-            , @RequestBody Customer customer) {
-        return ResponseEntity.ok().build();
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE
-            , path = "/{customer-id}")
-    public ResponseEntity delete(@PathVariable("customer-id") Long customerId) {
-        return ResponseEntity.noContent().build();
+    @RequestMapping(method = RequestMethod.GET,
+            path = "/test/merchants/{merchant-id}")
+    public ResponseEntity delete(@PathVariable("merchant-id") Long merchantId) {
+        return merchantClient.get(merchantId);
     }
 
 }

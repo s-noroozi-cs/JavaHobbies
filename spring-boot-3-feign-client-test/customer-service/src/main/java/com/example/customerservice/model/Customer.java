@@ -1,10 +1,8 @@
 package com.example.customerservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Customer {
     private String name;
     private String phoneNumber;

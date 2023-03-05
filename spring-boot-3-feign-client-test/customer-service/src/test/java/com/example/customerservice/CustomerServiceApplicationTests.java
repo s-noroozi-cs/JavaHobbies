@@ -1,79 +1,60 @@
 package com.example.customerservice;
 
+import com.example.customerservice.client.MerchantClient;
 import lombok.SneakyThrows;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestConfiguration
+@ActiveProfiles("test")
 class CustomerServiceApplicationTests {
 
-
-	@LocalServerPort
-	private int port;
-
-	@SneakyThrows
-	HttpResponse<String> sendGetRequest(String path) {
-		URI uri = new URI("http://localhost:" + port + path);
-		HttpRequest request = HttpRequest
-				.newBuilder(uri)
-				.GET()
-				.build();
-		return HttpClient.newBuilder()
-				.build()
-				.send(request, HttpResponse.BodyHandlers.ofString());
-	}
+    @MockBean
+    private MerchantClient merchantClient;
 
 
-	@Test
-	void contextLoads() {
-	}
+    @LocalServerPort
+    private int port;
 
-	@Test
-	@SneakyThrows
-	void check_open_api_json() {
-		HttpResponse<String> response = sendGetRequest("/v3/api-docs");
-		Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
-
-		JSONObject js = new JSONObject(response.body());
-		JSONObject paths = js.getJSONObject("paths");
-
-		String specificMerchantPath = "/api/v1/customers/{customer-id}";
-		Assertions.assertTrue(paths.has(specificMerchantPath));
-		check_operation_status(paths.getJSONObject(specificMerchantPath),true);
+    @SneakyThrows
+    @Test
+    void test_merchant_mock() {
 
 
-		String saveMerchantPath = "/api/v1/customers";
-		Assertions.assertTrue(paths.has(saveMerchantPath));
-		check_operation_status(paths.getJSONObject(saveMerchantPath),false);
+        final String mockResponse = UUID.randomUUID().toString();
 
-	}
+        Mockito
+                .when(merchantClient.get(Mockito.any()))
+                .thenReturn(ResponseEntity.ok(mockResponse));
 
-	@Test
-	void check_swagger_ui_redirect(){
-		HttpResponse<String> response = sendGetRequest("/swagger-ui.html");
-		Assertions.assertEquals(HttpStatus.FOUND.value(), response.statusCode());
-	}
 
-	@Test
-	void check_swagger_ui(){
-		HttpResponse<String> response = sendGetRequest("/swagger-ui/index.html");
-		Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
-	}
+        URI uri = new URI("http://localhost:" + port +
+                "/api/v1/customers/test/merchants/" + System.currentTimeMillis());
+        HttpRequest request = HttpRequest
+                .newBuilder(uri)
+                .GET()
+                .build();
+        HttpResponse response = HttpClient.newHttpClient().send(request,
+                HttpResponse.BodyHandlers.ofString());
 
-	private void check_operation_status(JSONObject operation,boolean existMerchant){
-		Assertions.assertEquals(existMerchant,operation.has("get"));
-		Assertions.assertEquals(existMerchant,operation.has("put"));
-		Assertions.assertEquals(existMerchant,operation.has("delete"));
-		Assertions.assertNotEquals(existMerchant,operation.has("post"));
-	}
+        Assertions.assertEquals(HttpStatus.OK.value(), response.statusCode());
+        Assertions.assertEquals(mockResponse,response.body());
 
+    }
 }

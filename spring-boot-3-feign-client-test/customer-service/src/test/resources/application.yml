@@ -1,17 +1,16 @@
 server:
-  port: 8082
+  port: 8081
 spring:
   application:
-    name: merchant
+    name: customer
   cloud:
+    loadbalancer:
+      merchant:
+        url: http://test:9090
     consul:
       host: localhost
       port: 8500
       discovery:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
-        healthCheckInterval: 30s
-
-debug: true
-
-
+        healthCheckInterval: 1s
