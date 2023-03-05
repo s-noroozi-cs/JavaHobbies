@@ -4,13 +4,12 @@ spring:
   application:
     name: customer
   cloud:
-    loadbalancer:
-      merchant:
-        url: http://test:9090
     consul:
       host: localhost
       port: 8500
       discovery:
+        register: false
+        enabled: false
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
         healthCheckInterval: 1s
