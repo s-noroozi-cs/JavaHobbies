@@ -47,6 +47,10 @@
 		</dependency>
 		<dependency>
 			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core-micrometer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
