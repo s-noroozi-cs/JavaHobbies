@@ -15,6 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
+		<loki.logback.appender.version>1.3.2</loki.logback.appender.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -48,6 +49,11 @@
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core-micrometer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.loki4j</groupId>
+			<artifactId>loki-logback-appender</artifactId>
+			<version>${loki.logback.appender.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.projectreactor</groupId>
