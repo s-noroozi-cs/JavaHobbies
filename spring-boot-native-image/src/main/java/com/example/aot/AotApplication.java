@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @SpringBootApplication
 @RestController
 public class AotApplication {
@@ -16,8 +18,8 @@ public class AotApplication {
         SpringApplication.run(AotApplication.class, args);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/sayHello/{name}")
-    public ResponseEntity<String> sayHello(@PathVariable("name") String name) {
-        return ResponseEntity.ok("Hello, %s".formatted(name));
+    @RequestMapping(method = RequestMethod.GET, path = "/date")
+    public ResponseEntity<String> showServerDate() {
+        return ResponseEntity.ok(LocalDateTime.now().toString());
     }
 }
