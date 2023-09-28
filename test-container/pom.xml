@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <test.container.version>1.17.1</test.container.version>
+        <test.container.version>1.17.6</test.container.version>
         <junit.version>5.8.2</junit.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <logback.version>1.4.5</logback.version>
