@@ -1,0 +1,7 @@
+FROM  native-tool
+WORKDIR /app
+COPY . /app
+EXPOSE 8080
+RUN cd /app && mvn -Pnative native:compile
+WORKDIR /app
+ENTRYPOINT ["./target/native-compile", "--spring.profiles.active=local"]
