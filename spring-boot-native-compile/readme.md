@@ -22,3 +22,12 @@
 ### Using dive tool to see layers of your image
     dive your_image_name
 
+
+# Reference
+* https://iximiuz.com/en/posts/containers-distroless-images/
+* https://upx.github.io/
+* https://thenewstack.io/dive-a-simple-app-for-viewing-the-contents-of-a-docker-image/
+* https://github.com/wagoodman/dive
+* https://github.com/upx/upx
+* https://github.com/graalvm/native-build-tools
+
