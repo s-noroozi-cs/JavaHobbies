@@ -1,0 +1,6 @@
+FROM   ghcr.io/graalvm/native-image-community:17-muslib
+ENV PATH "$JAVA_HOME/bin:$PATH"
+SHELL ["/bin/bash", "-c"]
+RUN microdnf install --nodocs openssl util-linux unzip zip
+RUN microdnf install -y wget && microdnf install -y tar &&  microdnf install -y gzip 
+RUN microdnf install -y maven
