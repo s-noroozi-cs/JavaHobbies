@@ -23,7 +23,7 @@
     dive your_image_name
 
 
-# Reference
+# References
 * https://iximiuz.com/en/posts/containers-distroless-images/
 * https://upx.github.io/
 * https://thenewstack.io/dive-a-simple-app-for-viewing-the-contents-of-a-docker-image/
