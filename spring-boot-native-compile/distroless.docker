@@ -1,0 +1,3 @@
+FROM gcr.io/distroless/static
+COPY native-binary-compiled-app /app
+CMD ["/app"]
