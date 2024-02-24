@@ -11,22 +11,21 @@ spring:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
         healthCheckInterval: 30s
-    gateway:
+    gateway.mvc:
       discovery:
         locator:
           enabled: true
-      routes:
-        - id: customer
-          uri: lb://customer
-          predicates:
-            - Path=/customer/**
-          filters:
-            - RewritePath=/customer/(?<path>.*), /$\{path}
-        - id: merchant
-          uri: lb://merchant
-          predicates:
-            - Path=/merchant/**
-          filters:
-            - RewritePath=/merchant/(?<path>.*), /$\{path}
-
-springdoc.api-docs.path: ":-)"
+          lowerCaseServiceId: true
+#      routes:
+#        - id: customer-service
+#          uri: lb://customer-service
+#          predicates:
+#          - Path=/customer-service/**
+#          filters:
+#          - RewritePath=/customer-service/(?<segment>.*), /$\{segment}
+#        - id: merchant-service
+#          uri: lb://merchant-service
+#          predicates:
+#          - Path=/merchant-service/**
+#          filters:
+#          - RewritePath=/merchant-service/(?<path>.*), /$\{path}
