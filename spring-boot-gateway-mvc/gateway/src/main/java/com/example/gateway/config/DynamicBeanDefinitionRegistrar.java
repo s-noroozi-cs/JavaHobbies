@@ -4,6 +4,7 @@ import static org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFu
 import static org.springframework.cloud.gateway.server.mvc.filter.LoadBalancerFilterFunctions.lb;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
+import static org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates.path;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ public class DynamicBeanDefinitionRegistrar implements BeanDefinitionRegistryPos
   private Supplier<RouterFunction<ServerResponse>> makeRouteSupplier(String serviceName) {
     return () ->
         route(serviceName)
-            .GET("/" + serviceName + "/**", http())
+            .route(path("/" + serviceName + "/**"), http())
             .before(rewritePath("/" + serviceName + "/(?<segment>.*)", "/${segment}"))
             .filter(lb(serviceName))
             .build();
