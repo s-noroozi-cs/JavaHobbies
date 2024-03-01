@@ -18,9 +18,10 @@
   <description>Demo project for Spring Boot</description>
 
   <modules>
-  	<module>../auth-service</module>
+  	<module>../auth</module>
   	<module>../gateway</module>
   	<module>../common</module>
+    <module>../customer</module>
   </modules>
 
   <properties>
