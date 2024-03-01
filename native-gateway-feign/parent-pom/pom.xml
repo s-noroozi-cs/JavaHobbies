@@ -14,12 +14,13 @@
   <artifactId>parent-pom</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>parent-pom</name>
+  <packaging>pom</packaging>
   <description>Demo project for Spring Boot</description>
 
   <modules>
-  	<module>auth-service</module>
-  	<module>gateway</module>
-  	<module>common</module>
+  	<module>../auth-service</module>
+  	<module>../gateway</module>
+  	<module>../common</module>
   </modules>
 
   <properties>
