@@ -1,4 +1,3 @@
-
 #! /bin/bash
 
-mvnw clean
+./mvnw clean -P native native:compile
