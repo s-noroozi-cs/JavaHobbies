@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    gateway:
+      mvc:
+        enabled:
+    refresh:
+      enabled: false
