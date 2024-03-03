@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SampleController {
 
-  private final HttpBinClient httpBinClient;
+  private final ChildServiceClient httpBinClient;
 
-  public SampleController(HttpBinClient httpBinClient) {
+  public SampleController(ChildServiceClient httpBinClient) {
     this.httpBinClient = httpBinClient;
   }
 
