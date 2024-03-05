@@ -5,16 +5,15 @@ import static org.springframework.web.servlet.function.RequestPredicates.path;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.server.mvc.GatewayServerMvcAutoConfiguration;
-import org.springframework.cloud.gateway.server.mvc.GatewayServerMvcAutoConfiguration2;
+import org.springframework.cloud.gateway.server.mvc.CustomGatewayServerMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
 @SpringBootApplication(exclude = GatewayServerMvcAutoConfiguration.class,
-scanBasePackageClasses = GatewayServerMvcAutoConfiguration2.class)
+scanBasePackageClasses = CustomGatewayServerMvcAutoConfiguration.class)
 public class NativeMvcGatewayApplication {
 
   public static void main(String[] args) {
