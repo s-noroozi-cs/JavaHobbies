@@ -9,9 +9,9 @@
         <relativePath>./pom.xml</relativePath>
     </parent>
 	<groupId>com.example</groupId>
-	<artifactId>customer-service</artifactId>
+	<artifactId>uuid-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>customer-service</name>
+	<name>uuid-service</name>
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>
