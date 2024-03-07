@@ -21,7 +21,7 @@
     </properties>
 
     <modules>
-        <module>customer-service</module>
+        <module>uuid-service</module>
         <module>open-feign</module>
         <module>retrofit</module>
         <module>spring-http-client</module>
