@@ -2,6 +2,12 @@
 
 ### Create environment
 
+# Docker container to build
+
+    docker build --tag=java-native-tool:java-17 -f antive-tool.docker
+    
+    docker run  -v cuurent-path:/app --entrypoint=/bin/bash java-native-tool:java-17
+
 # Maven project
 
 ### Compile your code and prepared AOT using folliwng command
