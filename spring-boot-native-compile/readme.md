@@ -47,4 +47,5 @@
 * https://github.com/wagoodman/dive
 * https://github.com/upx/upx
 * https://github.com/graalvm/native-build-tools
+* https://medium.com/graalvm/compressed-graalvm-native-images-4d233766a214
 
