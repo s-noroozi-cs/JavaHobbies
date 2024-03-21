@@ -11,7 +11,3 @@ spring:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
         healthCheckInterval: 30s
-
-dynamic.route.service.names:
-  - customer-service
-  - merchant-service
