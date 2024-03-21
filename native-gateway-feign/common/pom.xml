@@ -7,13 +7,13 @@
         <groupId>com.example</groupId>
         <artifactId>parent-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../parent-pom/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.example</groupId>
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gateway</name>
+    <name>common</name>
     <description>Demo project for Spring Boot</description>
 
 
