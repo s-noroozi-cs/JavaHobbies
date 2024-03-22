@@ -11,4 +11,5 @@ public class Customer {
     private String name;
     private String phoneNumber;
     private String address;
+    private boolean enable;
 }

@@ -19,6 +19,7 @@ public class CustomerController {
             .address("address-" + customerId)
             .name("name-" + customerId)
             .phoneNumber("phoneNumber-" + customerId)
+            .enable(true)
             .build());
     }
 
