@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>auth-service</artifactId>
+    <artifactId>payment-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>auth-service</name>
+    <name>payment-service</name>
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
