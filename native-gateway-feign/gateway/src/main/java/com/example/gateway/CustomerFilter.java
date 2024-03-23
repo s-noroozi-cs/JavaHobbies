@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 public class CustomerFilter implements GlobalFilter, Ordered {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+      exchange.getRequest().getHeaders().get("x-customer-id");
     return chain.filter(exchange);
   }
 
