@@ -2,7 +2,7 @@ server:
   port: 8082
 spring:
   application:
-    name: merchant
+    name: merchant-service
   cloud:
     consul:
       host: localhost
@@ -10,8 +10,6 @@ spring:
       discovery:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
-        healthCheckInterval: 30s
-
-debug: true
+        healthCheckInterval: 1s
 
 

@@ -10,23 +10,23 @@ spring:
       discovery:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
-        healthCheckInterval: 30s
+        healthCheckInterval: 1s
     gateway:
       discovery:
         locator:
           enabled: true
       routes:
-        - id: customer
-          uri: lb://customer
+        - id: swagger-ui
+          uri: lb://gateway
           predicates:
-            - Path=/customer/**
+            - Path=/swagger-ui/index.html
           filters:
-            - RewritePath=/customer/(?<path>.*), /$\{path}
-        - id: merchant
-          uri: lb://merchant
+            - RedirectTo=302, /webjars/swagger-ui/index.html
+        - id: swagger-config
+          uri: lb://gateway
           predicates:
-            - Path=/merchant/**
+            - Path=/webjars/swagger-ui/${springdoc.api-docs.path}/swagger-config
           filters:
-            - RewritePath=/merchant/(?<path>.*), /$\{path}
+            - RewritePath=/webjars/swagger-ui/${springdoc.api-docs.path}/swagger-config, /v3/api-docs/swagger-config
 
-springdoc.api-docs.path: ":-)"
+springdoc.api-docs.path: ":-:"

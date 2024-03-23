@@ -2,7 +2,7 @@ server:
   port: 8081
 spring:
   application:
-    name: customer
+    name: customer-service
   cloud:
     consul:
       host: localhost
