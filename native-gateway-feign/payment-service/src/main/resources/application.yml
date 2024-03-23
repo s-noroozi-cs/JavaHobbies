@@ -2,12 +2,12 @@ server:
   port: 8080
 spring:
   application:
-    name: auth-service
+    name: payment-service
   cloud:
     consul:
-      host: localhost
+      host: 127.0.0.1
       port: 8500
       discovery:
         instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /actuator/health
-        healthCheckInterval: 30s
+        healthCheckInterval: 1s
