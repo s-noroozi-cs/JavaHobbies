@@ -9,16 +9,18 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <java.source..version>21</java.source..version>
+        <java.source.version>21</java.source.version>
         <java.target.version>21</java.target.version>
         <pitest.version>1.16.0</pitest.version>
+        <pitest-junit5-plugin>1.2.1</pitest-junit5-plugin>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -37,7 +39,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.source..version}</source>
+                    <source>${java.source.version}</source>
                     <target>${java.target.version}</target>
                 </configuration>
             </plugin>
@@ -45,6 +47,13 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>${pitest.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>${pitest-junit5-plugin}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <targetClasses>
                         <param>com.mutation_test.code.*</param>
