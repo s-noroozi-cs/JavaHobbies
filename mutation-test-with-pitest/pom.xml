@@ -9,11 +9,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <java.source.version>21</java.source.version>
-        <java.target.version>21</java.target.version>
         <pitest.version>1.16.0</pitest.version>
         <pitest-junit5-plugin>1.2.1</pitest-junit5-plugin>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <java.version>21</java.version>
     </properties>
 
     <dependencies>
@@ -23,14 +22,7 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.pitest</groupId>
-            <artifactId>pitest-parent</artifactId>
-            <version>${pitest.version}</version>
-            <type>pom</type>
-        </dependency>
     </dependencies>
-
 
 
     <build>
@@ -39,8 +31,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.source.version}</source>
-                    <target>${java.target.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -56,10 +48,10 @@
                 </dependencies>
                 <configuration>
                     <targetClasses>
-                        <param>com.mutation_test.code.*</param>
+                        <param>com.mutation_test.code.Palindrome</param>
                     </targetClasses>
                     <targetTests>
-                        <param>com.mutation_test.test.*</param>
+                        <param>com.mutation_test.code.PalindromeTest</param>
                     </targetTests>
                 </configuration>
             </plugin>
