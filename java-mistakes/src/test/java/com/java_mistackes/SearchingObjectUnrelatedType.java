@@ -17,7 +17,7 @@ public class SearchingObjectUnrelatedType {
     assertTrue(numbers.contains((short) 2));
 
     assertTrue(one instanceof Short);
-    Object sumOfTwoShortValue = one + two; // care about boxed number
+    Number sumOfTwoShortValue = one + two; // care about boxed number
     assertTrue(sumOfTwoShortValue instanceof Integer);
   }
 }
