@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -59,4 +60,15 @@ public class ConcurrentModification {
         }
         Assertions.assertNotEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
     }
+
+  @Test
+  void prevent_concurrent_modification() {
+    List<String> list = new ArrayList<>(List.of("a", "b", "c"));
+    for (String item : new ArrayList<>(list)) if (item.equals("b")) list.add("x");
+    Assertions.assertTrue(list.contains("x"));
+
+    list = new CopyOnWriteArrayList<>(List.of("a", "b", "c"));
+    for (String item : list) if (item.equals("b")) list.add("x");
+    Assertions.assertTrue(list.contains("x"));
+  }
 }
