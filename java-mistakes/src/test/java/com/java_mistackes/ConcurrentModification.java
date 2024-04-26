@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class ConcurrentModification {
   @Test
-  void for_each_add_new_item() {
+  void addingNewItemInForEachLoop() {
     List<String> list = new ArrayList<>(List.of("a", "b", "c"));
 
-    Assertions.assertThrowsExactly(
+    assertThrowsExactly(
         ConcurrentModificationException.class,
         () -> {
           for (String item : list) if (item.equals("b")) list.add("x");
@@ -22,10 +24,10 @@ public class ConcurrentModification {
   }
 
   @Test
-  void iterator_add_new_item() {
+  void addingNewItemInIteratorLoop() {
     List<String> list = new ArrayList<>(List.of("a", "b", "c"));
 
-    Assertions.assertThrowsExactly(
+    assertThrowsExactly(
         ConcurrentModificationException.class,
         () -> {
           Iterator<String> iterator = list.iterator();
@@ -34,7 +36,7 @@ public class ConcurrentModification {
   }
 
   @Test
-  void for_each_remove_existing_item() {
+  void removingItemInForEachLoop() {
       List<String> list = new ArrayList<>(List.of("a", "b", "c"));
     List<String> traverseItems = new ArrayList<>();
     for (String item : list) {
@@ -43,11 +45,11 @@ public class ConcurrentModification {
         list.remove("a");
       }
     }
-    Assertions.assertNotEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
+    assertNotEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
   }
 
-    @Test
-    void iterator_remove_existing_item() {
+  @Test
+  void removingItemInIteratorLoop() {
         List<String> list = new ArrayList<>(List.of("a", "b", "c"));
         List<String> traverseItems = new ArrayList<>();
         Iterator<String> iterator = list.listIterator();
@@ -58,17 +60,37 @@ public class ConcurrentModification {
                 list.remove("a");
             }
         }
-        Assertions.assertNotEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
+        assertNotEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
     }
 
   @Test
-  void prevent_concurrent_modification() {
+  void addingNewItemWithOutConcurrencyModificationException() {
     List<String> list = new ArrayList<>(List.of("a", "b", "c"));
     for (String item : new ArrayList<>(list)) if (item.equals("b")) list.add("x");
-    Assertions.assertTrue(list.contains("x"));
+    assertTrue(list.contains("x"));
 
     list = new CopyOnWriteArrayList<>(List.of("a", "b", "c"));
     for (String item : list) if (item.equals("b")) list.add("x");
-    Assertions.assertTrue(list.contains("x"));
+    assertTrue(list.contains("x"));
+  }
+
+  @Test
+  void removingItemWithOutAnyIssue() {
+    List<String> list = new ArrayList<>(List.of("a", "b", "c"));
+    List<String> traverseItems = new ArrayList<>();
+
+    for (String item : new ArrayList<>(list)) {
+      traverseItems.add(item);
+      if (item.equals("b")) list.add("x");
+    }
+    assertEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
+
+    list = new CopyOnWriteArrayList<>(List.of("a", "b", "c"));
+    traverseItems.clear();
+    for (String item : list) {
+      traverseItems.add(item);
+      if (item.equals("b")) list.add("x");
+    }
+    assertEquals("a,b,c", traverseItems.stream().collect(Collectors.joining(",")));
   }
 }
