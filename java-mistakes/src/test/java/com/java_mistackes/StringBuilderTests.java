@@ -1,6 +1,7 @@
 package com.java_mistackes;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 public class StringBuilderTests {
@@ -9,11 +10,17 @@ public class StringBuilderTests {
     StringBuilder sb = new StringBuilder('[');
     sb.append("hello");
     sb.append(']');
-    Assertions.assertEquals("hello]", sb.toString());
+    assertEquals("hello]", sb.toString());
 
     sb = new StringBuilder("[");
     sb.append("hello");
     sb.append(']');
-    Assertions.assertEquals("[hello]", sb.toString());
+    assertEquals("[hello]", sb.toString());
+
+    sb = new StringBuilder(); // default capacity is 16
+    assertEquals(16, sb.capacity());
+
+    sb = new StringBuilder('a'); // ascii code 'a' is 97
+    assertEquals(97, sb.capacity());
   }
 }
