@@ -38,4 +38,13 @@ public class RegistrationServerInstanceTests {
             get_load_balancer_with_zero_capacity()
                 .register(ServerInstance.builder().address("   ").build()));
   }
+
+  @Test
+  void check_zero_capacity() {
+    Assertions.assertThrowsExactly(
+            IllegalArgumentException.class,
+            () ->
+                    get_load_balancer_with_zero_capacity()
+                            .register(ServerInstance.builder().address("it's ok").build()));
+  }
 }
