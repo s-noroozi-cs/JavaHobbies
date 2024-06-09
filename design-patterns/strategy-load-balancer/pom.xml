@@ -7,37 +7,47 @@
     <groupId>com.java.design-pattern.strategy</groupId>
     <artifactId>load-balancer</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <junit.jupiter.api.version>5.10.2</junit.jupiter.api.version>
+        <lombok.version>1.18.32</lombok.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version>
+        <maven.compile.plugin.version>3.13.0</maven.compile.plugin.version>
+        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
+            <version>${junit.jupiter.api.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
-            <scope>provided</scope>
+            <version>${lombok.version}</version>
         </dependency>
 
     </dependencies>
-
-    <properties>
-        <java.source..version>21</java.source..version>
-        <java.target.version>21</java.target.version>
-    </properties>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compile.plugin.version}</version>
                 <configuration>
-                    <source>${java.source..version}</source>
-                    <target>${java.target.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
             </plugin>
         </plugins>
     </build>
