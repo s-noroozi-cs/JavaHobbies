@@ -1,6 +1,5 @@
 package com.java.design_pattern.concurrency.producer_consumer;
 
-import lombok.SneakyThrows;
 
 import java.util.LinkedList;
 import java.util.Queue;
