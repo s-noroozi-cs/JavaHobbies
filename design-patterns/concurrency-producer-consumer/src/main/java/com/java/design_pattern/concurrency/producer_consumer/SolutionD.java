@@ -1,6 +1,5 @@
 package com.java.design_pattern.concurrency.producer_consumer;
 
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,7 +18,7 @@ public class SolutionD {
 
     public synchronized void publish(String msg) throws InterruptedException {
       String name = Thread.currentThread().getName();
-      if (queue.size() == capacity) {
+      while (queue.size() == capacity) {
         System.out.println("Queue Full!" + name + " waiting for message to be consumed...");
         wait();
       }
@@ -32,7 +31,7 @@ public class SolutionD {
 
     public synchronized void consume() throws InterruptedException {
       String name = Thread.currentThread().getName();
-      if (queue.size() == 0) {
+      while (queue.size() == 0) {
         System.out.println(name + " waiting for new message...");
         wait();
       }
@@ -86,9 +85,7 @@ public class SolutionD {
 
   public static void main(String[] args) {
     Data data = new Data(5);
-    Thread producer = new Thread(new Producer(data), "producer");
-    Thread consumer = new Thread(new Consumer(data), "consumer");
-    producer.start();
-    consumer.start();
+    new Thread(new Producer(data), "producer").start();
+    for (int i = 1; i <= 5; i++) new Thread(new Consumer(data), "Consumer " + i).start();
   }
 }
