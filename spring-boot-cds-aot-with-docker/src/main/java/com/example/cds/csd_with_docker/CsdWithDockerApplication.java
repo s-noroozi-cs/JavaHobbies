@@ -1,4 +1,4 @@
-package com.example.cds.csd_with_build_pack;
+package com.example.cds.csd_with_docker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
