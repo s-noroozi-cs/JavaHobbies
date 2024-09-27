@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CsdWithBuildPackApplication {
+public class CsdWithDockerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CsdWithBuildPackApplication.class, args);
+		SpringApplication.run(CsdWithDockerApplication.class, args);
 	}
 
 }
