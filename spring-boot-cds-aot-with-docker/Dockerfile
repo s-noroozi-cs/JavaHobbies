@@ -1,17 +1,17 @@
-FROM bellsoft/liberica-runtime-container:jdk-21-crac-cds-musl as builder
+FROM bellsoft/liberica-runtime-container:jdk-21-slim-musl as builder
 
 WORKDIR /home/app
 ADD spring-petclinic /home/app/spring-petclinic-main
 RUN cd spring-petclinic-main && ./mvnw -Dmaven.test.skip=true clean package
 
-FROM bellsoft/liberica-runtime-container:jdk-21-cds-slim-musl as optimizer
+FROM bellsoft/liberica-runtime-container:jre-21-slim-musl as optimizer
 
 WORKDIR /app
 COPY --from=builder /home/app/spring-petclinic-main/target/*.jar petclinic.jar
 RUN java -Djarmode=tools -jar petclinic.jar extract --layers --launcher
 
 
-FROM bellsoft/liberica-runtime-container:jdk-21-cds-slim-musl
+FROM docker pull bellsoft/liberica-runtime-container:jre-21-slim-musl  
 
 ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa", "org.springframework.boot.loader.launch.JarLauncher"]
 COPY --from=optimizer /app/app/dependencies/ ./
