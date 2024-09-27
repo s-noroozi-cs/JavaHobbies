@@ -1,0 +1,5 @@
+FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
+
+WORKDIR /app
+COPY target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
