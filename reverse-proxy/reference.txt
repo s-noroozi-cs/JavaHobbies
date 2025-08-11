@@ -1,3 +1,5 @@
 https://azureserv.com/@salarai.de/how-to-enable-mutual-tls-in-a-sprint-boot-application-77144047940f?__cpo=aHR0cHM6Ly9tZWRpdW0uY29t
 
+docker run --rm -it -v ~/github/JavaHobbies/reverse-proxy/default.conf:/etc/nginx/conf.d/default.conf -v ~/Desktop/pki:/etc/nginx/certs -p 8080:443 nginx
 
+curl --key client.key --cert client.pem https://127.0.0.1:8080/callback --insecure -X POST -H "x:111" -H "y:2222"
