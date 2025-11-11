@@ -1,0 +1,14 @@
+# Disable all auto-configuration
+spring:
+  cloud:
+    # Disable service discovery if not needed
+    discovery:
+      enabled: false
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: false
+      # Disable reactive auto-configuration if present
+      reactive:
+        enabled: false
