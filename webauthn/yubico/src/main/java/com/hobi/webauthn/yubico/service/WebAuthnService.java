@@ -57,6 +57,7 @@ public class WebAuthnService {
                 })
             .origins(new HashSet<>(Arrays.asList("http://localhost:8080")))
             .appId(makeAppId())
+            .attestationConveyancePreference(AttestationConveyancePreference.DIRECT)
             .build();
   }
 
@@ -74,7 +75,7 @@ public class WebAuthnService {
   }
 
   private RelyingPartyIdentity generateIdentity() {
-    return RelyingPartyIdentity.builder().id("localhost").name("WebAuthn Demo").build();
+    return RelyingPartyIdentity.builder().id("localhost").name("localhost").build();
   }
 
   // Registration Start
@@ -88,7 +89,17 @@ public class WebAuthnService {
 
     PublicKeyCredentialCreationOptions options =
         relyingParty.startRegistration(
-            StartRegistrationOptions.builder().user(userIdentity).build());
+            StartRegistrationOptions.builder()
+                .user(userIdentity)
+                .timeout(60000)
+                .extensions(RegistrationExtensionInputs.builder().credProps(true).build())
+                .authenticatorSelection(
+                    AuthenticatorSelectionCriteria.builder()
+                        .userVerification(UserVerificationRequirement.PREFERRED)
+                        .residentKey(ResidentKeyRequirement.PREFERRED)
+                        .authenticatorAttachment(AuthenticatorAttachment.PLATFORM)
+                        .build())
+                .build());
 
     registrationOptions.put(username, options);
     userStorage.put(username, userIdentity);
@@ -130,7 +141,11 @@ public class WebAuthnService {
   public PublicKeyCredentialRequestOptions startAuthentication(String username) {
     PublicKeyCredentialRequestOptions options =
         relyingParty
-            .startAssertion(StartAssertionOptions.builder().username(Optional.of(username)).build())
+            .startAssertion(
+                StartAssertionOptions.builder()
+                    .userVerification(UserVerificationRequirement.REQUIRED)
+                    .username(Optional.of(username))
+                    .build())
             .getPublicKeyCredentialRequestOptions();
 
     assertionOptions.put(username, options);
