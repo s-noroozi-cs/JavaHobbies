@@ -1,15 +1,11 @@
 package com.hobi.webauthn.yubico.servlet;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(
-    name = "WebAuthnServlet",
-    urlPatterns = {"/api/webauthn/*"})
 public class WebAuthnServlet extends HttpServlet {
   private final WebAuthnWebHandler handler = new WebAuthnWebHandler();
 
@@ -26,7 +22,7 @@ public class WebAuthnServlet extends HttpServlet {
       if (pathInfo == null) {
         handler.sendError(response, "Invalid endpoint", 400);
 
-      }else{
+      } else {
 
         switch (pathInfo) {
           case "/register/start":
@@ -47,6 +43,9 @@ public class WebAuthnServlet extends HttpServlet {
       }
     } catch (Throwable e) {
       handler.sendError(response, "Server error: " + e.getMessage(), 500);
+    }finally{
+        response.getWriter().flush();
+        response.getWriter().close();
     }
   }
 }

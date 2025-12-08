@@ -1,6 +1,7 @@
 package com.hobi.webauthn.yubico.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.hobi.webauthn.yubico.service.WebAuthnService;
 import com.yubico.webauthn.data.PublicKeyCredentialCreationOptions;
 import com.yubico.webauthn.data.PublicKeyCredentialRequestOptions;
@@ -15,8 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WebAuthnWebHandler {
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper;
   private final WebAuthnService webAuthnService = new WebAuthnService();
+
+  public WebAuthnWebHandler() {
+    objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new Jdk8Module());
+  }
 
   public void sendError(HttpServletResponse response, String message, int status)
       throws IOException {

@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class YubicoApp {
-    public static void main(String[] args){
-        SpringApplication.run(YubicoApp.class, args);
-
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(YubicoApp.class, args);
+  }
 }
