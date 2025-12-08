@@ -4,6 +4,8 @@ import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
+import com.yubico.webauthn.extension.appid.AppId;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -54,7 +56,17 @@ public class WebAuthnService {
                   }
                 })
             .origins(new HashSet<>(Arrays.asList("http://localhost:8080")))
+            .appId(makeAppId())
             .build();
+  }
+
+  private static Optional<AppId> makeAppId() {
+    try {
+      return Optional.ofNullable(new AppId("https://localhost:8080"));
+    } catch (Throwable ex) {
+      ex.printStackTrace();
+      return Optional.empty();
+    }
   }
 
   private ByteArray toByteArray(String data) {
