@@ -40,8 +40,13 @@
 
         const options = await startResp.json();
 
+        debugger;
+
         // Step 2: Create credential in browser
         const credential = await SimpleWebAuthnBrowser.startRegistration(options);
+
+        debugger;
+
 
         // Step 3: Send credential to server
         const finishResp = await fetch(`${API_BASE}/register/finish`, {
@@ -53,7 +58,9 @@
             })
         });
 
+        debugger;
         const result = await finishResp.json();
+
         showResult(result.message);
     }
 
