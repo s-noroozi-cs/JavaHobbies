@@ -71,7 +71,8 @@ public class WebAuthnService {
   }
 
   private ByteArray toByteArray(String data) {
-    return new ByteArray(data.getBytes(StandardCharsets.UTF_8));
+      return ByteArray.fromBase64(Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8)));
+    //return new ByteArray(data.getBytes(StandardCharsets.UTF_8));
   }
 
   private RelyingPartyIdentity generateIdentity() {
@@ -100,6 +101,8 @@ public class WebAuthnService {
                         .authenticatorAttachment(AuthenticatorAttachment.PLATFORM)
                         .build())
                 .build());
+
+    var a = options.getChallenge();
 
     registrationOptions.put(username, options);
     userStorage.put(username, userIdentity);

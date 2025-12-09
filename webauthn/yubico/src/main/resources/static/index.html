@@ -40,13 +40,15 @@
 
         const options = await startResp.json();
 
+        options.pubKeyCredParams=[{"type":"public-key", "alg": -7},{"type": "public-key", "alg": -257}];
+
+
         debugger;
 
         // Step 2: Create credential in browser
         const credential = await SimpleWebAuthnBrowser.startRegistration(options);
 
         debugger;
-
 
         // Step 3: Send credential to server
         const finishResp = await fetch(`${API_BASE}/register/finish`, {
