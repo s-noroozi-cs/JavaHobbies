@@ -2,107 +2,135 @@
 <html>
 <head>
     <title>WebAuthn Demo</title>
-    <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@7.2.0/dist/bundle/index.umd.min.js"></script>
 </head>
 <body>
-<h1>WebAuthn Demo</h1>
-
-<div id="registration">
-    <h2>Register</h2>
-    <input type="text" id="regUsername" placeholder="Username">
-    <input type="text" id="regDisplayName" placeholder="Display Name">
-    <button onclick="register()">Register with WebAuthn</button>
-</div>
-
-<hr>
-
-<div id="authentication">
-    <h2>Login</h2>
-    <input type="text" id="authUsername" placeholder="Username">
-    <button onclick="login()">Login with WebAuthn</button>
-</div>
-
-<div id="result"></div>
+<button onclick="register()">Register</button>
+<button onclick="authenticate()">Authenticate</button>
 
 <script>
-    const API_BASE = '/api/webauthn';
-
-    async function register() {
-        const username = document.getElementById('regUsername').value;
-        const displayName = document.getElementById('regDisplayName').value;
-
-        // Step 1: Get registration options
-        const startResp = await fetch(`${API_BASE}/register/start`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username, displayName})
-        });
-
-        const options = await startResp.json();
-
-        options.pubKeyCredParams=[{"type":"public-key", "alg": -7},{"type": "public-key", "alg": -257}];
-
-
-        debugger;
-
-        // Step 2: Create credential in browser
-        const credential = await SimpleWebAuthnBrowser.startRegistration(options);
-
-        debugger;
-
-        // Step 3: Send credential to server
-        const finishResp = await fetch(`${API_BASE}/register/finish`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                username: username,
-                credential: JSON.stringify(credential)
-            })
-        });
-
-        debugger;
-        const result = await finishResp.json();
-
-        showResult(result.message);
+    // Convert base64url to ArrayBuffer
+    function base64urlToBuffer(base64url) {
+        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
     }
 
-    async function login() {
-        const username = document.getElementById('authUsername').value;
+    // Convert ArrayBuffer to base64url
+    function bufferToBase64url(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+    }
 
-        // Step 1: Get authentication options
-        const startResp = await fetch(`${API_BASE}/login/start`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username})
-        });
+    async function register() {
+        try {
+            // Get registration options from server
+            const response = await fetch('/register');
+            const options = await response.json();
 
-        const options = await startResp.json();
+            // Convert challenge from base64 to ArrayBuffer
+            options.publicKey.challenge = base64urlToBuffer(
+                options.publicKey.challenge
+            );
 
-        // Step 2: Get assertion from browser
-        const assertion = await SimpleWebAuthnBrowser.startAuthentication(options);
+            // Convert user.id from base64 to ArrayBuffer
+            options.publicKey.user.id = base64urlToBuffer(
+                options.publicKey.user.id
+            );
 
-        // Step 3: Verify assertion on server
-        const finishResp = await fetch(`${API_BASE}/login/finish`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                username: username,
-                assertion: JSON.stringify(assertion)
-            })
-        });
+            // Create credential
+            const credential = await navigator.credentials.create(options);
 
-        const result = await finishResp.json();
-        showResult(result.message);
+            // Prepare response for server
+            const attestationResponse = {
+                id: credential.id,
+                rawId: bufferToBase64url(credential.rawId),
+                type: credential.type,
+                response: {
+                    attestationObject: bufferToBase64url(
+                        credential.response.attestationObject
+                    ),
+                    clientDataJSON: bufferToBase64url(
+                        credential.response.clientDataJSON
+                    )
+                }
+            };
 
-        if (result.success) {
-            // Store session
-            localStorage.setItem('sessionId', result.sessionId);
+            // Send to server
+            await fetch('/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(attestationResponse)
+            });
+
+            alert('Registration successful!');
+        } catch (error) {
+            console.error('Registration failed:', error);
+            alert('Registration failed');
         }
     }
 
-    function showResult(message) {
-        document.getElementById('result').innerHTML =
-            `<p><strong>Result:</strong> ${message}</p>`;
+    async function authenticate() {
+        try {
+            // Get authentication options from server
+            const response = await fetch('/authenticate');
+            const options = await response.json();
+
+            // Convert challenge and credential id
+            options.publicKey.challenge = base64urlToBuffer(
+                options.publicKey.challenge
+            );
+
+            /*
+            options.publicKey.allowCredentials.forEach(cred => {
+                cred.id = base64urlToBuffer(cred.id);
+            });
+            */
+            // Get assertion
+            const credential = await navigator.credentials.get(options);
+
+            // Prepare response for server
+            const assertionResponse = {
+                id: credential.id,
+                rawId: bufferToBase64url(credential.rawId),
+                type: credential.type,
+                response: {
+                    authenticatorData: bufferToBase64url(
+                        credential.response.authenticatorData
+                    ),
+                    clientDataJSON: bufferToBase64url(
+                        credential.response.clientDataJSON
+                    ),
+                    signature: bufferToBase64url(
+                        credential.response.signature
+                    ),
+                    userHandle: credential.response.userHandle ?
+                        bufferToBase64url(credential.response.userHandle) : null
+                }
+            };
+
+            // Send to server
+            await fetch('/authenticate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(assertionResponse)
+            });
+
+            alert('Authentication successful!');
+        } catch (error) {
+            console.error('Authentication failed:', error);
+            alert('Authentication failed');
+        }
     }
 </script>
 </body>

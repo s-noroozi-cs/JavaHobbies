@@ -1,8 +1,7 @@
 package com.hobi.webauthn.yubico.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.hobi.webauthn.yubico.servlet.WebAuthnServlet;
+import com.hobi.webauthn.yubico.servlet.AuthenticateServlet;
+import com.hobi.webauthn.yubico.servlet.RegisterServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +10,17 @@ import org.springframework.context.annotation.Configuration;
 public class BeanDefConfig {
 
   @Bean
-  public ServletRegistrationBean servletRegistrationBean() {
-    ServletRegistrationBean bean =
-        new ServletRegistrationBean(new WebAuthnServlet(), "/api/webauthn/*");
+  public ServletRegistrationBean fidoRegisterServlet() {
+    ServletRegistrationBean bean = new ServletRegistrationBean(new RegisterServlet(), "/register");
     bean.setLoadOnStartup(1);
     return bean;
   }
 
-
+  @Bean
+  public ServletRegistrationBean fidoAuthenticateServlet() {
+    ServletRegistrationBean bean =
+        new ServletRegistrationBean(new AuthenticateServlet(), "/authenticate");
+    bean.setLoadOnStartup(1);
+    return bean;
+  }
 }
