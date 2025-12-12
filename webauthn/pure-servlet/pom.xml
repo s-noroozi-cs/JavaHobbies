@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>com.hobi.webauthn</groupId>
-    <artifactId>yubico</artifactId>
+    <artifactId>pure-servlet</artifactId>
     <version>0.0.01</version>
 
     <properties>
         <java.version>21</java.version>
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
-        <yubico.webauthn-server-core.version>2.7.0</yubico.webauthn-server-core.version>
+
     </properties>
 
     <dependencies>
@@ -29,11 +29,7 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.yubico</groupId>
-            <artifactId>webauthn-server-core</artifactId>
-            <version>${yubico.webauthn-server-core.version}</version>
-        </dependency>
+
     </dependencies>
 
     <build>
