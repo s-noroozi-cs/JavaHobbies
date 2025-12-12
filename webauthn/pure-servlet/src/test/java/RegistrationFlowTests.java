@@ -1,4 +1,6 @@
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.credential.CredentialRecord;
+import com.webauthn4j.credential.CredentialRecordImpl;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.RegistrationData;
 import com.webauthn4j.data.RegistrationParameters;
@@ -12,10 +14,31 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationFlowTests {
+  private static final Origin origin = Origin.create("http://localhost:8080");
   private static final String REG_REQ = "register-response.json";
   private static final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
   private static final WebAuthnManager webAuthnManager =
       WebAuthnManager.createNonStrictWebAuthnManager();
+
+  private RegistrationParameters getRegistrationParameters() {
+    // Server properties
+    String rpId = "localhost" /* set rpId */;
+    Challenge challenge =
+        new DefaultChallenge("7LzBmPxNlDJXl97MDiQWIyxCWiAm2phVKPDZQ9dCiwU") /* set challenge */;
+
+    byte[] tokenBindingId = null /* set tokenBindingId */;
+    ServerProperty serverProperty = new ServerProperty(origin, rpId, challenge, tokenBindingId);
+
+    // expectations
+    List<PublicKeyCredentialParameters> pubKeyCredParams = null;
+    boolean userVerificationRequired = false;
+    boolean userPresenceRequired = true;
+
+    RegistrationParameters registrationParameters =
+        new RegistrationParameters(
+            serverProperty, pubKeyCredParams, userVerificationRequired, userPresenceRequired);
+    return registrationParameters;
+  }
 
   private String fetch_content(String resource) {
     try (var stream = classLoader.getResourceAsStream(resource)) {
@@ -36,23 +59,19 @@ public class RegistrationFlowTests {
 
   @Test
   void verify_reg_response() {
-
-    // Server properties
-    Origin origin = Origin.create("http://localhost:8080") /* set origin */;
-    String rpId = "localhost" /* set rpId */;
-    Challenge challenge =
-        new DefaultChallenge("7LzBmPxNlDJXl97MDiQWIyxCWiAm2phVKPDZQ9dCiwU") /* set challenge */;
-    byte[] tokenBindingId = null /* set tokenBindingId */;
-    ServerProperty serverProperty = new ServerProperty(origin, rpId, challenge, tokenBindingId);
-
-    // expectations
-    List<PublicKeyCredentialParameters> pubKeyCredParams = null;
-    boolean userVerificationRequired = false;
-    boolean userPresenceRequired = true;
-
-    RegistrationParameters registrationParameters =
-        new RegistrationParameters(
-            serverProperty, pubKeyCredParams, userVerificationRequired, userPresenceRequired);
+    RegistrationParameters registrationParameters = getRegistrationParameters();
     webAuthnManager.verify(get_registration_data(), registrationParameters);
+  }
+
+  @Test
+  void build_credential_record() {
+    var registrationData = get_registration_data();
+    CredentialRecord credentialRecord =
+        new CredentialRecordImpl(
+            registrationData.getAttestationObject(),
+            registrationData.getCollectedClientData(),
+            registrationData.getClientExtensions(),
+            registrationData.getTransports());
+    Assertions.assertNotNull(credentialRecord);
   }
 }
