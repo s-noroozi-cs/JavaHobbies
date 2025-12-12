@@ -1,0 +1,35 @@
+{
+  "publicKey": {
+    "rp": {
+      "name": "My Website",
+      "id": "localhost"
+    },
+    "user": {
+      "id": "dXNlcjEyMw==",
+      "name": "user@example.com",
+      "displayName": "User Display Name"
+    },
+    "challenge": "7LzBmPxNlDJXl97MDiQWIyxCWiAm2phVKPDZQ9dCiwU=",
+    "pubKeyCredParams": [
+      {
+        "type": "public-key",
+        "alg": -8
+      },
+      {
+        "type": "public-key",
+        "alg": -7
+      },
+      {
+        "type": "public-key",
+        "alg": -257
+      }
+    ],
+    "timeout": 60000,
+    "attestation": "direct",
+    "authenticatorSelection": {
+      "residentKey": "required",
+      "requireResidentKey": true,
+      "userVerification": "preferred"
+    }
+  }
+}

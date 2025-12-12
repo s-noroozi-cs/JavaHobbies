@@ -1,9 +1,0 @@
-{
-  "id": "utYmdVo29GV8wKK6aVxPyg",
-  "rawId": "utYmdVo29GV8wKK6aVxPyg",
-  "type": "public-key",
-  "response": {
-    "attestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViUSZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NdAAAAAOqbjWZNAR0hPOS2tIy1ddQAELrWJnVaNvRlfMCiumlcT8qlAQIDJiABIVggd-pnn5RrJtC9Tqtc3xop7iVQf7ZNuVfKZUPkJi7xKKYiWCAZ0yDnVRG_4AQ-J6Ihc5_JLfn8fg4v2wdy40sNPEA4ng",
-    "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiUS1vXzB1YWlBYWVsTkVWSkoxeUpBUndJa2lqRHlTOXpwZ1Q3eHNFaGVMcyIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImNyb3NzT3JpZ2luIjpmYWxzZX0"
-  }
-}
