@@ -1,5 +1,6 @@
 package com.hobi.webauthn.yubico.servlet;
 
+import com.webauthn4j.WebAuthnManager;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +14,9 @@ import java.util.Base64;
 import java.util.stream.Collectors;
 
 public class RegisterServlet extends HttpServlet {
+  private static final WebAuthnManager webAuthnManager =
+      WebAuthnManager.createNonStrictWebAuthnManager();
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -86,6 +90,8 @@ public class RegisterServlet extends HttpServlet {
 
     // Parse the credential creation response
     String json = req.getReader().lines().collect(Collectors.joining());
+
+    var registrationData = webAuthnManager.parseRegistrationResponseJSON(json);
 
     // Basic validation - in reality, parse JSON properly
     HttpSession session = req.getSession();
